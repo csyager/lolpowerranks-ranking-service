@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: lolpowerranks-rankingservice
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+server:
+  servlet:
+    context-path: /
