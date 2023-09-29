@@ -2,19 +2,19 @@ package com.lolpowerranks.rankingservice.service;
 
 import com.lolpowerranks.rankingservice.model.Ranking;
 import com.lolpowerranks.rankingservice.model.dao.RankingDAOModel;
-import com.lolpowerranks.rankingservice.repository.RankingDAO;
 import com.lolpowerranks.rankingservice.repository.RankingRepository;
 import com.lolpowerranks.rankingservice.repository.TeamDAO;
+import com.lolpowerranks.rankingservice.repository.TournamentRepository;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -23,20 +23,22 @@ public class RankingsServiceImpl implements RankingsService {
     @Autowired
     private RankingRepository rankingRepository;
     @Autowired
+    private TournamentRepository tournamentRepository;
+    @Autowired
     private TeamDAO teamDao;
 
     @Override
     public List<Ranking> getTournamentRanking(@NonNull String tournamentId, Optional<String> stage) {
-        List<RankingDAOModel> teams = rankingRepository.getTeamsBatch(List.of(
-                "102787200129022886",
-                "109671201259007744",
-                "108159964760727567"
-        ));
-        ArrayList<Ranking> rankings = new ArrayList<>();
-        teams.forEach(team -> {
-            Ranking ranking = team.toRanking();
-            rankings.add(ranking);
-        });
+        List<String> teamIds = tournamentRepository.getTeamsInTournamentStage(tournamentId, stage);
+        log.info(teamIds.toString());
+        List<RankingDAOModel> teamRankings = rankingRepository.getTeamRankingsBatch(teamIds);
+        log.info(teamRankings.toString());
+        List<Ranking> rankings = teamRankings.stream()
+                .map(RankingDAOModel::toRanking).sorted().collect(Collectors.toList());
+        // converts global rank to local (tournament + stage) rank
+        for (int i = 1; i < rankings.size() + 1; i++) {
+            rankings.get(i - 1).setRank(i);
+        }
         return rankings;
     }
 

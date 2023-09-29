@@ -11,12 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Repository("RankingDAO")
 @Slf4j
@@ -49,7 +47,7 @@ public class RankingDAO implements RankingRepository {
         return mapper.scan(RankingDAOModel.class, scanExpression);
     }
 
-    public List<RankingDAOModel> getTeamsBatch(List<String> teamIds) {
+    public List<RankingDAOModel> getTeamRankingsBatch(List<String> teamIds) {
         List<KeyPair> keyPairList = teamIds.stream()
                 .map(teamId -> new KeyPair().withHashKey(teamId))
                 .toList();

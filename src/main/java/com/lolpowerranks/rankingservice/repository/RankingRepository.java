@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface RankingRepository {
     List<RankingDAOModel> getTopNRankedTeams(int topN);
-    List<RankingDAOModel> getTeamsBatch(List<String> teamIds);
+    List<RankingDAOModel> getTeamRankingsBatch(List<String> teamIds);
 }
