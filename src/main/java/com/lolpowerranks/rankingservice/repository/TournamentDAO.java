@@ -30,16 +30,16 @@ public class TournamentDAO implements TournamentRepository {
     }
 
     @Override
-    public List<String> getTeamsInTournamentStage(String tournamentId, Optional<String> stage) {
+    public List<String> getTeamsInTournamentStage(String tournamentId, String stage) {
         Map<String, AttributeValue> expressionAttrVal = new HashMap<>();
         expressionAttrVal.put(":partitionKey", new AttributeValue().withS(tournamentId));
         DynamoDBQueryExpression<TournamentTeamMappingDAOModel> queryExpression = new DynamoDBQueryExpression<TournamentTeamMappingDAOModel>()
                 .withKeyConditionExpression("tournament_id = :partitionKey");
         // if the stage is passed as a param, filter results to only include that stage
-        stage.ifPresent(s -> {
-            expressionAttrVal.put(":stage_slug", new AttributeValue().withS(s));
+        if (stage != null) {
+            expressionAttrVal.put(":stage_slug", new AttributeValue().withS(stage));
             queryExpression.withFilterExpression("stage_slug = :stage_slug");
-        });
+        }
         queryExpression.withExpressionAttributeValues(expressionAttrVal);
         List<TournamentTeamMappingDAOModel> tournamentTeamMappings = mapper.query(TournamentTeamMappingDAOModel.class, queryExpression);
         Set<String> teamIds = tournamentTeamMappings.stream()

@@ -17,3 +17,6 @@ amazon:
 
 ## Running the service locally
 To start the local development server run `./gradlew bootRunLocal`.  This will use the local Spring profile configured in the previous step to interface with the datastores on AWS.
+
+## Running tests
+To run the test suite, run `./gradlew test`.  This will run the test suite, and also publish a test report in `build/reports/tests/index.html` and a coverage report in `build/reports/jacoco/index.html`.

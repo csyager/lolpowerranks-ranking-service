@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -28,11 +27,9 @@ public class RankingsServiceImpl implements RankingsService {
     private TeamDAO teamDao;
 
     @Override
-    public List<Ranking> getTournamentRanking(@NonNull String tournamentId, Optional<String> stage) {
+    public List<Ranking> getTournamentRanking(@NonNull String tournamentId, String stage) {
         List<String> teamIds = tournamentRepository.getTeamsInTournamentStage(tournamentId, stage);
-        log.info(teamIds.toString());
         List<RankingDAOModel> teamRankings = rankingRepository.getTeamRankingsBatch(teamIds);
-        log.info(teamRankings.toString());
         List<Ranking> rankings = teamRankings.stream()
                 .map(RankingDAOModel::toRanking).sorted().collect(Collectors.toList());
         // converts global rank to local (tournament + stage) rank

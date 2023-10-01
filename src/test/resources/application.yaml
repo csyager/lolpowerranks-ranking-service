@@ -1,0 +1,4 @@
+amazon:
+  aws:
+    accesskey: test-access-key
+    secretkey: test-secret-key
