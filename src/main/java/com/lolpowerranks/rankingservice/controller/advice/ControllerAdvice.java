@@ -20,7 +20,7 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
     ) {
         return new ResponseEntity<>(
                 ExceptionResponse.builder()
-                        .message(ex.getMessage())
+                        .message(ex.getConstraintViolations().iterator().next().getMessage())
                         .exceptionType(HttpStatus.BAD_REQUEST.name())
                         .build(),
                 HttpStatus.BAD_REQUEST

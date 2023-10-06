@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,7 +39,7 @@ public class RankingsServiceImpl implements RankingsService {
 
     @Override
     public List<Ranking> getGlobalRanking(int numberOfTeams) {
-            List<RankingDAOModel> teams = rankingRepository.getTopNRankedTeams(numberOfTeams);
+        List<RankingDAOModel> teams = rankingRepository.getTopNRankedTeams(numberOfTeams);
         ArrayList<Ranking> rankings = new ArrayList<>(numberOfTeams);
         teams.forEach(team -> {
             Ranking ranking = team.toRanking();
@@ -49,7 +50,9 @@ public class RankingsServiceImpl implements RankingsService {
     }
 
     @Override
-    public List<Ranking> getTeamRanking(@NonNull String[] teams) {
-        return null;
+    public List<Ranking> getTeamRanking(@NonNull String[] teamIds) {
+        List<RankingDAOModel> teamRankings = rankingRepository.getTeamRankingsBatch(Arrays.asList(teamIds));
+        return teamRankings.stream()
+                .map(RankingDAOModel::toRanking).sorted().toList();
     }
 }

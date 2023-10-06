@@ -19,6 +19,7 @@ import java.util.List;
 import static java.lang.Math.min;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.isNull;
@@ -73,6 +74,12 @@ public class RankingsControllerTests {
 
         when(service.getGlobalRanking(anyInt()))
             .thenAnswer(i -> allStageRankings.subList(0, min(i.getArgument(0), allStageRankings.size())));
+
+        when(service.getTeamRanking(any(String[].class)))
+                .thenAnswer(i -> {
+                    String[] teamIds = i.getArgument(0, String[].class);
+                    return allStageRankings.subList(0, min(teamIds.length, allStageRankings.size()));
+                });
     }
 
     @Test
@@ -105,7 +112,8 @@ public class RankingsControllerTests {
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$").exists())
                 .andExpect(jsonPath("$.exceptionType").exists())
-                .andExpect(jsonPath("$.exceptionType", equalTo("BAD_REQUEST")));
+                .andExpect(jsonPath("$.exceptionType", equalTo("BAD_REQUEST")))
+                .andExpect(jsonPath("$.message", equalTo(Constants.LESS_THAN_MIN_GLOBAL_RANKINGS_MSG)));
     }
 
     @Test
@@ -114,7 +122,8 @@ public class RankingsControllerTests {
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$").exists())
                 .andExpect(jsonPath("$.exceptionType").exists())
-                .andExpect(jsonPath("$.exceptionType", equalTo("BAD_REQUEST")));
+                .andExpect(jsonPath("$.exceptionType", equalTo("BAD_REQUEST")))
+                .andExpect(jsonPath("$.message", equalTo(Constants.EXCEEDS_MAX_GLOBAL_RANKINGS_MSG)));
     }
 
     @Test
@@ -123,6 +132,24 @@ public class RankingsControllerTests {
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$").exists())
                 .andExpect(jsonPath("$", hasSize(1)));
+    }
+
+    @Test
+    public void testSuccesfullyGetsTeamRankings() throws Exception {
+        mockMvc.perform(get("/team_rankings?team_ids=test-1,test-2,test-3"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$").exists())
+                .andExpect(jsonPath("$", hasSize(3)));
+    }
+
+    @Test
+    public void testTeamRankingsUnsuccessfulWhenNoTeamsPassed() throws Exception {
+        mockMvc.perform(get("/team_rankings"))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$").exists())
+                .andExpect(jsonPath("$.exceptionType").exists())
+                .andExpect(jsonPath("$.exceptionType", equalTo("BAD_REQUEST")))
+                .andExpect(jsonPath("$.message", equalTo(Constants.EMPTY_TEAM_IDS_MSG)));
     }
 
 }

@@ -102,6 +102,13 @@ public class RankingsServiceImplTests {
         assertRankingRangeInResults(results, 1, numTeams);
     }
 
+    @Test
+    public void testSuccessfullyGetsTeamRankings() {
+        String[] teamIds = new String[]{"test-team-1", "test-team-2", "test-team-3"};
+        List<Ranking> results = rankingService.getTeamRanking(teamIds);
+        assertEquals(teamIds.length, results.size());
+    }
+
     public void assertRankingRangeInResults(List<Ranking> results, int low, int high) {
         boolean highFound = false;
         for (int i = 0; i < results.size(); i++) {

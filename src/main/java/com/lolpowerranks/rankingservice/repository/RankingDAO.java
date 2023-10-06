@@ -26,7 +26,7 @@ public class RankingDAO implements RankingRepository {
         Map<String, AttributeValue> expressionAttrVal = new HashMap<>();
         expressionAttrVal.put(":rankAttribute", new AttributeValue().withN(String.valueOf(topN)));
         DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
-                .withFilterExpression("ranking < :rankAttribute").withExpressionAttributeValues(expressionAttrVal);
+                .withFilterExpression("ranking <= :rankAttribute").withExpressionAttributeValues(expressionAttrVal);
         return mapper.scan(RankingDAOModel.class, scanExpression);
     }
 

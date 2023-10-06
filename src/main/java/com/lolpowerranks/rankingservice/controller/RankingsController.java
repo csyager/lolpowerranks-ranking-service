@@ -3,6 +3,7 @@ package com.lolpowerranks.rankingservice.controller;
 import com.lolpowerranks.rankingservice.model.Ranking;
 import com.lolpowerranks.rankingservice.model.response.ExceptionResponse;
 import com.lolpowerranks.rankingservice.model.response.GlobalRankingResponse;
+import com.lolpowerranks.rankingservice.model.response.TeamRankingResponse;
 import com.lolpowerranks.rankingservice.model.response.TournamentRankingResponse;
 import com.lolpowerranks.rankingservice.service.RankingsService;
 import com.lolpowerranks.rankingservice.util.Constants;
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,13 +70,35 @@ public class RankingsController {
     @GetMapping("/global_rankings")
     public ResponseEntity<GlobalRankingResponse> getGlobalRankings(
             @Min(value=Constants.MIN_GLOBAL_RANKINGS,
-                    message="Requested number of teams must be greater than or equal to " + Constants.MIN_GLOBAL_RANKINGS)
+                    message=Constants.LESS_THAN_MIN_GLOBAL_RANKINGS_MSG)
             @Max(value=Constants.MAX_GLOBAL_RANKINGS,
-                    message="Requested number of teams must be less than or equal to 100" + Constants.MAX_GLOBAL_RANKINGS)
+                    message=Constants.EXCEEDS_MAX_GLOBAL_RANKINGS_MSG)
             @RequestParam(value = "number_of_teams", defaultValue = Constants.DEFAULT_GLOBAL_RANKINGS) int numberOfTeams
     ) {
         List<Ranking> rankings = service.getGlobalRanking(numberOfTeams);
         GlobalRankingResponse response = GlobalRankingResponse.builder()
+                .rankings(rankings)
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Get global rankings", description = "Get rankings of all teams globally.")
+    @ApiResponse(
+            responseCode="200",
+            description="Successfully got rankings.",
+            content = @Content(schema = @Schema(implementation = TeamRankingResponse.class))
+    )
+    @ApiResponse(
+            responseCode="400",
+            description="Bad request",
+            content = @Content(schema = @Schema(implementation = ExceptionResponse.class))
+    )
+    @GetMapping("/team_rankings")
+    public ResponseEntity<TeamRankingResponse> getTeamRankings(
+            @RequestParam(value="team_ids", required=false) @NotEmpty(message = Constants.EMPTY_TEAM_IDS_MSG) String[] teamIds
+    ) {
+        List<Ranking> rankings = service.getTeamRanking(teamIds);
+        TeamRankingResponse response = TeamRankingResponse.builder()
                 .rankings(rankings)
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
