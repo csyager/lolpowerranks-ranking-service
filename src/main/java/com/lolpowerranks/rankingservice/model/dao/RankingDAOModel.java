@@ -5,9 +5,11 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.lolpowerranks.rankingservice.model.Ranking;
 import com.lolpowerranks.rankingservice.repository.RankingDAO;
+import lombok.Builder;
 import lombok.Setter;
 
 @DynamoDBTable(tableName = RankingDAO.TABLE_NAME)
+@Builder
 @Setter
 public class RankingDAOModel {
     private int ranking;

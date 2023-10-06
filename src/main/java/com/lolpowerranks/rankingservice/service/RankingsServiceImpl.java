@@ -3,7 +3,6 @@ package com.lolpowerranks.rankingservice.service;
 import com.lolpowerranks.rankingservice.model.Ranking;
 import com.lolpowerranks.rankingservice.model.dao.RankingDAOModel;
 import com.lolpowerranks.rankingservice.repository.RankingRepository;
-import com.lolpowerranks.rankingservice.repository.TeamDAO;
 import com.lolpowerranks.rankingservice.repository.TournamentRepository;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +22,6 @@ public class RankingsServiceImpl implements RankingsService {
     private RankingRepository rankingRepository;
     @Autowired
     private TournamentRepository tournamentRepository;
-    @Autowired
-    private TeamDAO teamDao;
 
     @Override
     public List<Ranking> getTournamentRanking(@NonNull String tournamentId, String stage) {
@@ -41,7 +38,7 @@ public class RankingsServiceImpl implements RankingsService {
 
     @Override
     public List<Ranking> getGlobalRanking(int numberOfTeams) {
-        List<RankingDAOModel> teams = rankingRepository.getTopNRankedTeams(numberOfTeams);
+            List<RankingDAOModel> teams = rankingRepository.getTopNRankedTeams(numberOfTeams);
         ArrayList<Ranking> rankings = new ArrayList<>(numberOfTeams);
         teams.forEach(team -> {
             Ranking ranking = team.toRanking();

@@ -47,8 +47,8 @@ public class RankingsControllerTests {
 
     @BeforeAll
     public static void init() {
-        allStageRankings = new ArrayList<>();
-        selectStageRankings = new ArrayList<>();
+        allStageRankings = new ArrayList<>(ALL_STAGES_SIZE);
+        selectStageRankings = new ArrayList<>(SELECT_STAGES_SIZE);
         for (int i = 1; i <= ALL_STAGES_SIZE; i++) {
             Ranking ranking = Ranking.builder()
                     .teamId(String.valueOf(i))

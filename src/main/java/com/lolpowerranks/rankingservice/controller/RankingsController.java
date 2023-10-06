@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +44,7 @@ public class RankingsController {
     )
     @GetMapping("/tournament_rankings/{tournamentId}")
     public ResponseEntity<TournamentRankingResponse> getTournamentRankings(
-            @NonNull @PathVariable("tournamentId") String tournamentId,
+            @PathVariable("tournamentId") String tournamentId,
             @RequestParam(value = "stage", required = false) String stage
     ) {
         List<Ranking> rankings = service.getTournamentRanking(tournamentId, stage);

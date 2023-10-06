@@ -4,6 +4,7 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,11 @@ public class DynamoDbConfig {
     @Bean
     public AmazonDynamoDB amazonDynamoDB() {
         return new AmazonDynamoDBClient(amazonAWSCredentials());
+    }
+
+    @Bean
+    public DynamoDBMapper dynamoDBMapper() {
+        return new DynamoDBMapper(amazonDynamoDB());
     }
 
     @Bean

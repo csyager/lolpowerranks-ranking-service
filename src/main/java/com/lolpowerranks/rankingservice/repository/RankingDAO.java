@@ -1,8 +1,6 @@
 package com.lolpowerranks.rankingservice.repository;
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.KeyPair;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
@@ -20,24 +18,9 @@ import java.util.Map;
 @Slf4j
 public class RankingDAO implements RankingRepository {
     @Autowired
-    private final AmazonDynamoDB client;
-
-    private final DynamoDBMapper mapper;
+    private DynamoDBMapper mapper;
 
     public static final String TABLE_NAME = "rankings";
-
-    public RankingDAO(AmazonDynamoDB client) {
-        this.client = client;
-        this.mapper = new DynamoDBMapper(client);
-    }
-
-    public List<RankingDAOModel> getTeamByRank(int rank) {
-        Map<String, AttributeValue> expressionAttrVal = new HashMap<>();
-        expressionAttrVal.put(":partitionKey", new AttributeValue().withN(String.valueOf(rank)));
-        DynamoDBQueryExpression<RankingDAOModel> queryExpression = new DynamoDBQueryExpression<RankingDAOModel>()
-                .withKeyConditionExpression("rank = :partitionKey").withExpressionAttributeValues(expressionAttrVal);
-        return mapper.query(RankingDAOModel.class, queryExpression);
-    }
 
     public List<RankingDAOModel> getTopNRankedTeams(int topN) {
         Map<String, AttributeValue> expressionAttrVal = new HashMap<>();

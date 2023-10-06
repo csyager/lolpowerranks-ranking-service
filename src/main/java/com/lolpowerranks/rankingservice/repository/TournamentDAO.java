@@ -11,23 +11,15 @@ import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Repository
 public class TournamentDAO implements TournamentRepository {
     @Autowired
-    private final AmazonDynamoDB client;
-
-    private final DynamoDBMapper mapper;
+    private DynamoDBMapper mapper;
 
     public static final String TEAM_MAPPING_TABLE = "tournament_teams";
-
-    public TournamentDAO(AmazonDynamoDB client) {
-        this.client = client;
-        this.mapper = new DynamoDBMapper(client);
-    }
 
     @Override
     public List<String> getTeamsInTournamentStage(String tournamentId, String stage) {
