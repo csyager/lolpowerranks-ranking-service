@@ -1,21 +1,23 @@
 package com.lolpowerranks.rankingservice.repository;
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
+import com.lolpowerranks.rankingservice.model.dao.TeamDAOModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public class TeamDAO {
+import java.util.List;
+
+@Repository("TeamDAO")
+public class TeamDAO implements TeamRepository {
     @Autowired
-    private final AmazonDynamoDB client;
+    private DynamoDBMapper mapper;
 
-    private final DynamoDBMapper mapper;
+    public static final String TABLE_NAME = "teams";
 
-    public TeamDAO(AmazonDynamoDB client) {
-        this.client = client;
-        this.mapper = new DynamoDBMapper(client);
+    @Override
+    public List<TeamDAOModel> getAllTeams() {
+        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+        return mapper.scan(TeamDAOModel.class, scanExpression);
     }
-
-
 }

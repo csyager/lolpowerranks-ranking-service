@@ -3,7 +3,9 @@ package com.lolpowerranks.rankingservice.repository;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.lolpowerranks.rankingservice.model.dao.TournamentDAOModel;
 import com.lolpowerranks.rankingservice.model.dao.TournamentTeamMappingDAOModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -20,6 +22,13 @@ public class TournamentDAO implements TournamentRepository {
     private DynamoDBMapper mapper;
 
     public static final String TEAM_MAPPING_TABLE = "tournament_teams";
+    public static final String TOURNAMENT_TABLE = "tournaments";
+
+    @Override
+    public List<TournamentDAOModel> getAllTournaments() {
+        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+        return mapper.scan(TournamentDAOModel.class, scanExpression);
+    }
 
     @Override
     public List<String> getTeamsInTournamentStage(String tournamentId, String stage) {
