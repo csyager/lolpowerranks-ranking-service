@@ -39,7 +39,7 @@ public class RankingDAO implements RankingRepository {
         keyPairForTable.put(RankingDAOModel.class, keyPairList);
 
         Map<String, List<Object>> batchResults = mapper.batchLoad(keyPairForTable);
-        return batchResults.getOrDefault("rankings", Collections.emptyList())
+        return batchResults.getOrDefault(TABLE_NAME, Collections.emptyList())
                 .stream()
                 .map(element -> (RankingDAOModel) element)
                 .toList();

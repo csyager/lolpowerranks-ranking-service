@@ -17,6 +17,8 @@ public class Ranking implements Comparable<Ranking> {
     private String teamName;
     @JsonProperty("team_rank")
     private Integer rank;
+    @JsonProperty("team_elo")
+    private Double teamElo;
 
     @Override
     public int compareTo(Ranking r) {

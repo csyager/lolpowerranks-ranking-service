@@ -5,13 +5,14 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.lolpowerranks.rankingservice.model.Stage;
+import com.lolpowerranks.rankingservice.repository.StageDAO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@DynamoDBTable(tableName = "tournament_stages")
+@DynamoDBTable(tableName = StageDAO.TABLE_NAME)
 @Builder
 @Getter
 @Setter

@@ -2,7 +2,9 @@ package com.lolpowerranks.rankingservice.service;
 
 import com.lolpowerranks.rankingservice.model.Ranking;
 import com.lolpowerranks.rankingservice.model.dao.RankingDAOModel;
+import com.lolpowerranks.rankingservice.model.dao.TeamELODAOModel;
 import com.lolpowerranks.rankingservice.repository.RankingRepository;
+import com.lolpowerranks.rankingservice.repository.TeamELORepository;
 import com.lolpowerranks.rankingservice.repository.TournamentRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +19,6 @@ import java.util.List;
 
 import static java.lang.Math.min;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -34,6 +35,9 @@ public class RankingsServiceImplTests {
 
     @Mock
     private TournamentRepository tournamentRepository;
+
+    @Mock
+    private TeamELORepository teamEloRepository;
 
     @InjectMocks
     private RankingsServiceImpl rankingService;
@@ -77,6 +81,19 @@ public class RankingsServiceImplTests {
             .thenAnswer(i -> allRankingModels.subList(0, min(ALL_RANKINGS_SIZE, i.getArgument(0, List.class).size())));
         lenient().when(rankingRepository.getTopNRankedTeams(anyInt()))
             .thenAnswer(i -> allRankingModels.subList(0, min(ALL_RANKINGS_SIZE, i.getArgument(0))));
+        lenient().when(teamEloRepository.getTeamElos(anyList()))
+            .thenAnswer(i -> {
+                List<String> teamIds = i.getArgument(0);
+                ArrayList<TeamELODAOModel> teamEloDaos = new ArrayList<>(teamIds.size());
+                for (String teamId: teamIds) {
+                    teamEloDaos.add(TeamELODAOModel.builder()
+                            .teamId(teamId)
+                            .elo(1000.0)
+                            .build()
+                    );
+                }
+                return teamEloDaos;
+            });
     }
 
     @Test
