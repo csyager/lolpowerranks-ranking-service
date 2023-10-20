@@ -2,6 +2,11 @@ spring:
   application:
     name: lolpowerranks-rankingservice
 
+cloud:
+  aws:
+    credentials:
+      instanceProfile: true
+
 server:
   servlet:
-    context-path: /rankings-service
+    context-path: /ranking-service

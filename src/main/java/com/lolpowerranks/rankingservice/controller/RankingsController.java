@@ -38,6 +38,17 @@ public class RankingsController {
         this.service = service;
     }
 
+    @Operation(summary = "Health check", description = "Health check")
+    @ApiResponse(
+            responseCode="200",
+            description="OK",
+            content = @Content(schema = @Schema(implementation = String.class))
+    )
+    @GetMapping("/health")
+    public ResponseEntity<String> healthCheck() {
+        return new ResponseEntity<>("OK", HttpStatus.OK);
+    }
+
     @Operation(summary = "Get rankings of teams in a tournament", description = "Get rankings of teams in a tournament.")
     @ApiResponse(
             responseCode="200",
