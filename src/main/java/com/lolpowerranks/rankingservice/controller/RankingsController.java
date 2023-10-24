@@ -71,7 +71,7 @@ public class RankingsController {
     @ApiResponse(
             responseCode="200",
             description="Successfully got rankings.",
-            content = @Content(schema = @Schema(implementation = TournamentRankingResponse.class))
+            content = @Content(schema = @Schema(implementation = GlobalRankingResponse.class))
     )
     @ApiResponse(
             responseCode="400",
@@ -93,7 +93,7 @@ public class RankingsController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @Operation(summary = "Get global rankings", description = "Get rankings of all teams globally.")
+    @Operation(summary = "Get rankings for selected teams", description = "Get rankings for selected teams.")
     @ApiResponse(
             responseCode="200",
             description="Successfully got rankings.",
